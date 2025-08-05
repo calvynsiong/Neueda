@@ -1,13 +1,33 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ShortenerTests {
+
+    // Arrange
+    String input = "ab";
+    String expected = "";
+    // unit under test
+    Truncator uut = new Truncator();
+
+
+    @BeforeEach
+    public void setup() {
+        // This method is called before each test method
+        // You can initialize common variables or objects here
+        input = "ab";
+        expected = "";
+        uut = new Truncator();
+    }
+
+
+
     @Test
     public void testShortenTwoCharacters() throws EmptyStringException {
-        // Arrange
-        String input = "ab";
-        String expected = "";
-        // unit under test
-        Truncator uut = new Truncator();
+
 
         // Act
         String actual = uut.truncate(input);
@@ -20,5 +40,18 @@ public class ShortenerTests {
     public void AwfulTestShortenTwoCharacters() throws EmptyStringException {
         Truncator uut = new Truncator();
         assertEquals("", uut.truncate("ab"));
+    }
+
+
+    @ParameterizedTest
+    @CsvSource({"abc,c", "abcd,cd", "a,a", "ab,b", "abcde,de", "abcdefg,efg", "abcdefgh,gh"})
+    public void parameterizedTest(String input, String expected) throws EmptyStringException {
+
+
+        // Act
+        String result = uut.truncate(input);
+
+        // Assert
+        assertEquals(expected, result);
     }
 }
