@@ -2,8 +2,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ShortenerTests {
@@ -54,5 +57,32 @@ public class ShortenerTests {
 
         // Assert
         assertEquals(expected, result);
+    }
+
+
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/resources/parameterized_test_cases.csv" )
+    public void parameterizedCSVFileTest(String input, String expected) throws EmptyStringException {
+
+
+        // Act
+        String result = uut.truncate(input);
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    public void testTruncateNullAndEmpty(String input) {
+        try {
+            uut.truncate(input);
+            fail();
+        } catch (EmptyStringException e) {
+            assertEquals("Get with the program, moron.  The Input cannot be empty", e.getMessage());
+        } catch (NullPointerException e) {
+            assertEquals("Get with the program, moron.  The Input cannot be null", e.getMessage());
+        }
     }
 }
